@@ -283,7 +283,7 @@
       </ul>
    </details>
 
-<h2><a id="title8" href="BugReportManual.md">Баг-репорты ручного тестирования</a></h2>
+<h2><a id="title8" href="BugReportsManual.md">Баг-репорты ручного тестирования</a></h2>
 
 <h2><a id="title9" href="ReportManual.md">Отчет ручного тестирования</a></h2>
 
