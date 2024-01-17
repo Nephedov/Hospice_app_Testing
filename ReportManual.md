@@ -25,4 +25,4 @@
   <a href="Cases.xlsx">Cases.xlsx</a> 
   - вкладка "failed test cases".
 Список баг-репортов на неудачные тест-кейсы, доступных для воспроизведения, описан в файле 
-  <a href="BugReportsManual.md">BugReportsManual.md</a>.
+  <a href="BugReports.md">BugReports.md</a>.
