@@ -6,9 +6,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.not;
 
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogIn;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogOut;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
@@ -27,8 +24,10 @@ import io.qameta.allure.kotlin.Story;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.matchers.CustomViewAction;
 import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
+import ru.iteco.fmhandroid.ui.pages.NewsPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage.ControlPanelPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage.ControlPanelPage.*;
+import ru.iteco.fmhandroid.ui.steps.Authorization;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 
 @LargeTest
@@ -40,55 +39,65 @@ public class NewsControlPanelPageTest {
     @Rule
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
-
+    private OpenPage openPage = new OpenPage();
+    private Authorization auth = new Authorization();
+    private AppBarPanel appBarPanel;
+    private ControlPanelPage controlPanelPage;
+    private FilterFormControlPanel filterFormControlPanel;
+    private CreateEditForm createEditForm;
     @Before
     public void setUp() {
-        tryLogIn();
-        OpenPage.newsControlPanel();
+        auth.tryLogIn();
+        openPage.newsControlPanel();
+        appBarPanel = new AppBarPanel();
+
+        controlPanelPage = new NewsPage().new ControlPanelPage();
+        filterFormControlPanel = controlPanelPage.new FilterFormControlPanel();
+        createEditForm = controlPanelPage.new CreateEditForm();
     }
     @After
     public void tearDown() {
-        tryLogOut();
+        auth.tryLogOut();
     }
 
 
-//    @Epic(value = "Тестирование UI")
-//    @Feature(value = "Панель AppBar")
-//    @Story(value = "AppBar на странице \"Панель управления\"")
-//    @Test
-//    @Description(value = "Тест проверяет отображение AppBar панели на странице \"Панель управления\"")
-//    public void shouldCheckAppBarOnControlPanelIsDisplayed() {
-//        ControlPanelPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
-//    }
-//
-//    @Epic(value = "Тестирование UI")
-//    @Feature(value = "Панель AppBar")
-//    @Story(value = "Лого AppBar на странице \"Панель управления\"")
-//    @Test
-//    @Description(value = "Тест проверяет отображение главной иконки на панели AppBar на странице \"Панель управления\"")
-//    public void shouldCheckAppBarLogoOnControlPanelIsDisplayed() {
-//        AppBarPanel.mainImage.checkWithTimeout(matches(isDisplayed()));
-//    }
-//
-//    @Epic(value = "Тестирование UI")
-//    @Feature(value = "Страница \"Панель управления\"")
-//    @Story(value = "Заголовок")
-//    @Test
-//    @Description(value = "Тест проверяет отображение заголовка на странице \"Панель управления\"")
-//    public void shouldCheckControlPanelTitleIsDisplayed() {
-//        ControlPanelPage.title.checkWithTimeout(matches(isDisplayed()));
-//    }
-//
-//    @Epic(value = "Тестирование UI")
-//    @Feature(value = "Страница \"Панель управления\"")
-//    @Story(value = "Кнопки управления")
-//    @Test
-//    @Description(value = "Тест проверяет отображение кнопок управления на странице \"Панель управления\"")
-//    public void shouldCheckControlButtonsIsDisplayed() {
-//        ControlPanelPage.sortButton.checkWithTimeout(matches(isDisplayed()));
-//        ControlPanelPage.filterButton.checkWithTimeout(matches(isDisplayed()));
-//        ControlPanelPage.addNewsButton.checkWithTimeout(matches(isDisplayed()));
-//    }
+    @Epic(value = "Тестирование UI")
+    @Feature(value = "Панель AppBar")
+    @Story(value = "AppBar на странице \"Панель управления\"")
+    @Test
+    @Description(value = "Тест проверяет отображение AppBar панели на странице \"Панель управления\"")
+    public void shouldCheckAppBarOnControlPanelIsDisplayed() {
+        controlPanelPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
+    }
+
+    @Epic(value = "Тестирование UI")
+    @Feature(value = "Панель AppBar")
+    @Story(value = "Лого AppBar на странице \"Панель управления\"")
+    @Test
+    @Description(value = "Тест проверяет отображение главной иконки на панели AppBar на странице \"Панель управления\"")
+    public void shouldCheckAppBarLogoOnControlPanelIsDisplayed() {
+        new AppBarPanel().mainImage.checkWithTimeout(matches(isDisplayed()));
+    }
+
+    @Epic(value = "Тестирование UI")
+    @Feature(value = "Страница \"Панель управления\"")
+    @Story(value = "Заголовок")
+    @Test
+    @Description(value = "Тест проверяет отображение заголовка на странице \"Панель управления\"")
+    public void shouldCheckControlPanelTitleIsDisplayed() {
+        controlPanelPage.title.checkWithTimeout(matches(isDisplayed()));
+    }
+
+    @Epic(value = "Тестирование UI")
+    @Feature(value = "Страница \"Панель управления\"")
+    @Story(value = "Кнопки управления")
+    @Test
+    @Description(value = "Тест проверяет отображение кнопок управления на странице \"Панель управления\"")
+    public void shouldCheckControlButtonsIsDisplayed() {
+        controlPanelPage.sortButton.checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.filterButton.checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.addNewsButton.checkWithTimeout(matches(isDisplayed()));
+    }
 
     @Epic(value = "Тестирование UI")
     @Feature(value = "Страница \"Панель управления\"")
@@ -101,23 +110,23 @@ public class NewsControlPanelPageTest {
         String creationTextField = "Дата создания";
         String authorTextField = "Автор";
 
-        ItemNewsControlPanel.titleOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.publicationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed())).
+        controlPanelPage.titleOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.publicationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed())).
                 check(matches(withText(publicationTextField)));
-        ItemNewsControlPanel.publicationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.creationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
+        controlPanelPage.publicationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.creationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(creationTextField)));
-        ItemNewsControlPanel.creationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.authorTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
+        controlPanelPage.creationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.authorTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(authorTextField)));
-        ItemNewsControlPanel.authorNameField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.publicationStatus(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.deleteNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.editNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.dropButtonOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-        ItemNewsControlPanel.iconOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.authorNameField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.publicationStatus(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.deleteNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.editNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.dropButtonOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.iconOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
 
-        ItemNewsControlPanel.descriptionOfNews(numberOfNews).checkWithTimeout(matches(not(isDisplayed())));
+        controlPanelPage.descriptionOfNews(numberOfNews).checkWithTimeout(matches(not(isDisplayed())));
     }
 
     @Epic(value = "Тестирование UI")
@@ -134,23 +143,23 @@ public class NewsControlPanelPageTest {
         String checkboxActive = "Активна";
         String checkboxNotActive = "Не активна";
 
-        ControlPanelPage.clickOnFilterButton();
+        controlPanelPage.clickOnFilterButton();
 
-        FilterFormControlPanel.title.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.title.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(formTitle)));
-        FilterFormControlPanel.categoryField.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.categoryField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(categoryHint)));
-        FilterFormControlPanel.dateStartField.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.dateStartField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(dateFormat)));
-        FilterFormControlPanel.dateEndField.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.dateEndField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(dateFormat)));
-        FilterFormControlPanel.acceptButton.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.acceptButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(acceptButton)));
-        FilterFormControlPanel.cancelButton.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.cancelButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(cancelButton)));
-        FilterFormControlPanel.checkboxActive.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.checkboxActive.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(checkboxActive)));
-        FilterFormControlPanel.checkboxNotActive.checkWithTimeout(matches(isDisplayed()))
+        filterFormControlPanel.checkboxNotActive.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(checkboxNotActive)));
     }
     @Epic(value = "Тестирование UI")
@@ -167,16 +176,16 @@ public class NewsControlPanelPageTest {
         String gratitude = "Благодарность";
         String helpIsNeeded = "Нужна помощь";
 
-        ControlPanelPage.clickOnFilterButton();
-        FilterFormControlPanel.clickOnCategoryField();
+        controlPanelPage.clickOnFilterButton();
+        filterFormControlPanel.clickOnCategoryField();
 
-        FilterFormControlPanel.category(birthday).checkWithTimeout(matches(isDisplayed()));
-        FilterFormControlPanel.category(salary).checkWithTimeout(matches(isDisplayed()));
-        FilterFormControlPanel.category(tradeUnion).checkWithTimeout(matches(isDisplayed()));
-        FilterFormControlPanel.category(holiday).checkWithTimeout(matches(isDisplayed()));
-        FilterFormControlPanel.category(massage).checkWithTimeout(matches(isDisplayed()));
-        FilterFormControlPanel.category(gratitude).checkWithTimeout(matches(isDisplayed()));
-        FilterFormControlPanel.category(helpIsNeeded).checkWithTimeout(matches(isDisplayed()));
+        filterFormControlPanel.category(birthday).checkWithTimeout(matches(isDisplayed()));
+        filterFormControlPanel.category(salary).checkWithTimeout(matches(isDisplayed()));
+        filterFormControlPanel.category(tradeUnion).checkWithTimeout(matches(isDisplayed()));
+        filterFormControlPanel.category(holiday).checkWithTimeout(matches(isDisplayed()));
+        filterFormControlPanel.category(massage).checkWithTimeout(matches(isDisplayed()));
+        filterFormControlPanel.category(gratitude).checkWithTimeout(matches(isDisplayed()));
+        filterFormControlPanel.category(helpIsNeeded).checkWithTimeout(matches(isDisplayed()));
 
         CustomViewAction.returnBack();
     }
@@ -198,27 +207,27 @@ public class NewsControlPanelPageTest {
         String saveButton = "Сохранить";
         String cancelButton = "Отмена";
 
-        ItemNewsControlPanel.clickOnEditNewsButton(1);
+        controlPanelPage.clickOnEditNewsButton(1);
 
-        AppBarPanel.topLineText.checkWithTimeout(matches(isDisplayed()))
+        appBarPanel.topLineText.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(appBarTopLine)));
-        AppBarPanel.bottomLineText.checkWithTimeout(matches(isDisplayed()))
+        appBarPanel.bottomLineText.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(appBarBottomLine)));
 
-        CreateEditForm.categoryField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.categoryField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(categoryField)));
-        CreateEditForm.titleField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.titleField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(titleField)));
-        CreateEditForm.publicationDateField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.publicationDateField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(publicationDateField)));
-        CreateEditForm.publicationTimeField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.publicationTimeField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(publicationTimeField)));
-        CreateEditForm.descriptionField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.descriptionField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(descriptionField)));
-        CreateEditForm.switcher.checkWithTimeout(matches(isDisplayed()));
-        CreateEditForm.saveButton.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.switcher.checkWithTimeout(matches(isDisplayed()));
+        createEditForm.saveButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(saveButton)));
-        CreateEditForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(cancelButton)));
     }
 
@@ -239,27 +248,27 @@ public class NewsControlPanelPageTest {
         String saveButton = "Сохранить";
         String cancelButton = "Отмена";
 
-        ControlPanelPage.clickOnAddNewsButton();
+        controlPanelPage.clickOnAddNewsButton();
 
-        AppBarPanel.topLineText.checkWithTimeout(matches(isDisplayed()))
+        appBarPanel.topLineText.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(appBarTopLine)));
-        AppBarPanel.bottomLineText.checkWithTimeout(matches(isDisplayed()))
+        appBarPanel.bottomLineText.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(appBarBottomLine)));
 
-        CreateEditForm.categoryField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.categoryField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(categoryField)));
-        CreateEditForm.titleField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.titleField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(titleField)));
-        CreateEditForm.publicationDateField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.publicationDateField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(publicationDateField)));
-        CreateEditForm.publicationTimeField.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.publicationTimeField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(publicationTimeField)));
-        CreateEditForm.descriptionField.checkWithTimeout(matches(isDisplayed())).
+        createEditForm.descriptionField.checkWithTimeout(matches(isDisplayed())).
                 check(matches(withHint(descriptionField)));
-        CreateEditForm.switcher.checkWithTimeout(matches(isDisplayed()));
-        CreateEditForm.saveButton.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.switcher.checkWithTimeout(matches(isDisplayed()));
+        createEditForm.saveButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(saveButton)));
-        CreateEditForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
+        createEditForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(cancelButton)));
     }
 }

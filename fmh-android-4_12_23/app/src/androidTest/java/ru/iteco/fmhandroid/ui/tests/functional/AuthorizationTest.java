@@ -1,7 +1,6 @@
 package ru.iteco.fmhandroid.ui.tests.functional;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogOut;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
@@ -34,14 +33,17 @@ public class AuthorizationTest {
     @Rule
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
+    private Authorization auth = new Authorization();
+    private AuthorizationPage authorizationPage;
 
     @Before
     public void setUp() {
-        tryLogOut();
+        auth.tryLogOut();
+        authorizationPage = new AuthorizationPage();
     }
     @After
     public void tearDown() {
-        tryLogOut();
+        auth.tryLogOut();
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -51,10 +53,10 @@ public class AuthorizationTest {
     @Description(value = "Тест проверяет отображение сообщения и отсутствие входа в приложение, при попытке входа с незаполненными полями логина и пароля")
     public void shouldCheckToastMessageIsDisplayedWithEmptyLoginAndPasswordFields() {
         String toastMessage = "Логин и пароль не могут быть пустыми";
-        AuthorizationPage.clickOnEnterButton();
+        authorizationPage.clickOnEnterButton();
 
         ToastMatcher.checkToastMessageIsDisplayed(toastMessage);
-        AuthorizationPage.title.checkWithTimeout(matches(isDisplayed()));
+        authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -64,10 +66,10 @@ public class AuthorizationTest {
     @Description(value = "Тест проверяет отображение сообщения и отсутствие входа в приложение, при попытке входа с невалидными данными")
     public void shouldCheckToastMessageIsDisplayed() {
         String toastMessage = "Логин или пароль не введены неверно";
-        Authorization.invalidLogin();
+        new Authorization().invalidLogin();
 
         ToastMatcher.checkToastMessageIsDisplayed(toastMessage);
-        AuthorizationPage.title.checkWithTimeout(matches(isDisplayed()));
+        authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -76,9 +78,9 @@ public class AuthorizationTest {
     @Test
     @Description(value = "Тест проверяет вход в приложение с валидными данными")
     public void shouldCheckValidAuthorization() {
-        Authorization.validLogin();
+        new Authorization().validLogin();
 
-        MainPage.newsContainer.checkWithTimeout(matches(isDisplayed()));
+        new MainPage().newsContainer.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -87,10 +89,11 @@ public class AuthorizationTest {
     @Test
     @Description(value = "Тест проверяет выход из аккаунта приложения")
     public void shouldCheckCancelAuthorization() {
-        Authorization.validLogin();
+        new Authorization().validLogin();
+        AppBarPanel appBarPanel = new AppBarPanel();
 
-        AppBarPanel.clickOnAuthButton();
-        AppBarPanel.clickOnLogOutButton();
-        AuthorizationPage.title.checkWithTimeout(matches(isDisplayed()));
+        appBarPanel.clickOnAuthButton();
+        appBarPanel.clickOnLogOutButton();
+        authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
     }
 }

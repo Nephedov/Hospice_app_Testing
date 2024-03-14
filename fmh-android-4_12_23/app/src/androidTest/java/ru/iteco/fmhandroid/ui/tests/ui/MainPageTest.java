@@ -5,8 +5,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static ru.iteco.fmhandroid.ui.matchers.CustomViewMatcher.recyclerViewMatcher;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogIn;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogOut;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
@@ -26,7 +24,7 @@ import io.qameta.allure.kotlin.Story;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
-import ru.iteco.fmhandroid.ui.pages.NewsPage.ItemNews;
+import ru.iteco.fmhandroid.ui.steps.Authorization;
 
 @LargeTest
 @RunWith(AllureAndroidJUnit4.class)
@@ -38,14 +36,17 @@ public class MainPageTest {
     @Rule
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
+    private Authorization auth = new Authorization();
+    private MainPage mainPage;
 
     @Before
     public void setUp() {
-        tryLogIn();
+        auth.tryLogIn();
+        mainPage = new MainPage();
     }
     @After
     public void tearDown() {
-        tryLogOut();
+        auth.tryLogOut();
     }
 
     @Epic(value = "Тестирование UI")
@@ -54,7 +55,7 @@ public class MainPageTest {
     @Test
     @Description(value = "Тест проверяет отображение AppBar панели на главной странице")
     public void shouldCheckAppBarOnMainIsDisplayed() {
-        MainPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
+        mainPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -63,7 +64,7 @@ public class MainPageTest {
     @Test
     @Description(value = "Тест проверяет отображение главной иконки на панели AppBar на главной странице")
     public void shouldCheckAppBarLogoOnMainIsDisplayed() {
-        AppBarPanel.mainImage.checkWithTimeout(matches(isDisplayed()));
+        new AppBarPanel().mainImage.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -72,7 +73,7 @@ public class MainPageTest {
     @Test
     @Description(value = "Тест проверяет отображение блока новостей на главной странице")
     public void shouldCheckNewsContainerIsDisplayed() {
-        MainPage.newsContainer.checkWithTimeout(matches(isDisplayed()));
+        mainPage.newsContainer.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -81,7 +82,7 @@ public class MainPageTest {
     @Test
     @Description(value = "Тест проверяет отображение заголовка блока новостей на главной странице")
     public void shouldCheckNewsTitleIsDisplayed() {
-        MainPage.newsContainerTitle.checkWithTimeout(matches(isDisplayed()));
+        mainPage.newsContainerTitle.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -90,7 +91,7 @@ public class MainPageTest {
     @Test
     @Description(value = "Тест проверяет отображение кнопки скрытия блока новостей на главной странице")
     public void shouldCheckDropButtonIsDisplayed() {
-        MainPage.dropButton.checkWithTimeout(matches(isDisplayed()));
+        mainPage.dropButton.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -101,7 +102,7 @@ public class MainPageTest {
     public void shouldCheckNumberOfNews() {
         int newsCount = 3;
 
-        MainPage.newsList.checkWithTimeout(matches(recyclerViewMatcher(newsCount)));
+        mainPage.newsList.checkWithTimeout(matches(recyclerViewMatcher(newsCount)));
     }
 
     @Epic(value = "Тестирование UI")
@@ -112,7 +113,7 @@ public class MainPageTest {
     public void shouldCheckAllNewsIsDisplayed() {
         String allNewsButton = "Все новости";
 
-        MainPage.allNewsButton.checkWithTimeout(matches(isDisplayed()))
+        mainPage.allNewsButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(allNewsButton)));
     }
 
@@ -122,13 +123,13 @@ public class MainPageTest {
     @Test
     @Description(value = "Тест проверяет отображение списка новостей на главной странице")
     public void shouldCheckNewsListIsDisplayed() {
-        MainPage.allNewsButton.checkWithTimeout(matches(isDisplayed()));
-        MainPage.newsList.checkWithTimeout(matches(isDisplayed()));
+        mainPage.allNewsButton.checkWithTimeout(matches(isDisplayed()));
+        mainPage.newsList.checkWithTimeout(matches(isDisplayed()));
 
-        MainPage.clickOnDropButton();
+        mainPage.clickOnDropButton();
 
-        MainPage.allNewsButton.checkWithTimeout(matches(not(isDisplayed())));
-        MainPage.newsList.checkWithTimeout(matches(not(isDisplayed())));
+        mainPage.allNewsButton.checkWithTimeout(matches(not(isDisplayed())));
+        mainPage.newsList.checkWithTimeout(matches(not(isDisplayed())));
     }
 }
 

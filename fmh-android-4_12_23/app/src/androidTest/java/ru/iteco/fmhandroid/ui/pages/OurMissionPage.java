@@ -12,45 +12,42 @@ import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.matchers.TimeoutEspresso;
 
 public class OurMissionPage {
-    public static TimeoutEspresso.TimedViewInteraction appBarPanel =
+    public TimeoutEspresso.TimedViewInteraction appBarPanel =
             onViewWithTimeout(withId(R.id.container_custom_app_bar_include_on_fragment_our_mission));
-    public static TimeoutEspresso.TimedViewInteraction title =
+    public TimeoutEspresso.TimedViewInteraction title =
             onViewWithTimeout(withId(R.id.our_mission_title_text_view));
-    public static TimeoutEspresso.TimedViewInteraction quotesList =
+    public TimeoutEspresso.TimedViewInteraction quotesList =
             onViewWithTimeout(15000, withId(R.id.our_mission_item_list_recycler_view));
 
 
-    public static void clickOnQuote(int num) {
+    public void clickOnQuote(int num) {
         int number = num -1;
         Allure.step("Клик по " + num + " цитате в списке");
         onViewWithTimeout(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number))
                 .performWithTimeout(click());
     }
 
+    public TimeoutEspresso.TimedViewInteraction descriptionOfQuote(int num) {
+        int number = num -1;
+        return onViewWithTimeout(allOf(withId(R.id.our_mission_item_description_text_view),
+                withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
+    }
 
-    public static class ItemQuote {
-        public static TimeoutEspresso.TimedViewInteraction descriptionOfQuote(int num) {
-            int number = num -1;
-            return onViewWithTimeout(allOf(withId(R.id.our_mission_item_description_text_view),
-                    withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
-        }
+    public TimeoutEspresso.TimedViewInteraction iconOfQuote(int num) {
+        int number = num -1;
+        return onViewWithTimeout(allOf(withId(R.id.our_mission_item_image_view),
+                withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
+    }
 
-        public static TimeoutEspresso.TimedViewInteraction iconOfQuote(int num) {
-            int number = num -1;
-            return onViewWithTimeout(allOf(withId(R.id.our_mission_item_image_view),
-                    withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
-        }
+    public TimeoutEspresso.TimedViewInteraction dropButtonOfQuote(int num) {
+        int number = num -1;
+        return onViewWithTimeout(allOf(withId(R.id.our_mission_item_open_card_image_button),
+                withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
+    }
 
-        public static TimeoutEspresso.TimedViewInteraction dropButtonOfQuote(int num) {
-            int number = num -1;
-            return onViewWithTimeout(allOf(withId(R.id.our_mission_item_open_card_image_button),
-                    withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
-        }
-
-        public static TimeoutEspresso.TimedViewInteraction titleOfQuote(int num) {
-            int number = num -1;
-            return onViewWithTimeout(allOf(withId(R.id.our_mission_item_title_text_view),
-                    withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
-        }
+    public TimeoutEspresso.TimedViewInteraction titleOfQuote(int num) {
+        int number = num -1;
+        return onViewWithTimeout(allOf(withId(R.id.our_mission_item_title_text_view),
+                withParent(withParent(childAtPosition(withId(R.id.our_mission_item_list_recycler_view), number)))));
     }
 }

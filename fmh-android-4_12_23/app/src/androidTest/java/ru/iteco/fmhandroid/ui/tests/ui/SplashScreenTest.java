@@ -5,6 +5,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,13 +30,20 @@ public class SplashScreenTest {
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
 
+    private SplashScreen splashScreen;
+
+    @Before
+    public void setUp() {
+        splashScreen = new SplashScreen();
+    }
+
     @Epic(value = "Тестирование UI")
     @Feature(value = "Экран загрузки Splash Screen")
     @Story(value = "Изображение")
     @Test
     @Description(value = "Тест проверяет отображение изображения")
     public void shouldCheckSplashScreenImageIsDisplayed() {
-        SplashScreen.welcomeImage.checkWithTimeout(matches(isDisplayed()));
+        splashScreen.welcomeImage.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -44,7 +52,7 @@ public class SplashScreenTest {
     @Test
     @Description(value = "Тест проверяет отображение индикатора загрузки")
     public void shouldCheckSplashScreenProgressIndicatorIsDisplayed() {
-        SplashScreen.progressIndicator.checkWithTimeout(matches(isDisplayed()));
+        splashScreen.progressIndicator.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -53,6 +61,6 @@ public class SplashScreenTest {
     @Test
     @Description(value = "Тест проверяет отображение приветственной цитаты")
     public void shouldCheckSplashScreenTextViewIsDisplayed() {
-        SplashScreen.welcomeText.checkWithTimeout(matches(isDisplayed()));
+        splashScreen.welcomeText.checkWithTimeout(matches(isDisplayed()));
     }
 }

@@ -7,9 +7,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.not;
 
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogIn;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogOut;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
@@ -31,6 +28,7 @@ import ru.iteco.fmhandroid.ui.matchers.CustomViewAction;
 import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
 import ru.iteco.fmhandroid.ui.pages.NewsPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage.FilterForm;
+import ru.iteco.fmhandroid.ui.steps.Authorization;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 
 @LargeTest
@@ -42,15 +40,21 @@ public class NewsPageTest {
     @Rule
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
-
+    private OpenPage openPage = new OpenPage();
+    private Authorization auth = new Authorization();
+    private NewsPage newsPage;
+    private FilterForm filterForm;
     @Before
     public void setUp() {
-        tryLogIn();
-        OpenPage.news();
+        auth.tryLogIn();
+        openPage.news();
+
+        newsPage = new NewsPage();
+        filterForm = newsPage.new FilterForm();
     }
     @After
     public void tearDown() {
-        tryLogOut();
+        auth.tryLogOut();
     }
 
     @Epic(value = "Тестирование UI")
@@ -59,7 +63,7 @@ public class NewsPageTest {
     @Test
     @Description(value = "Тест проверяет отображение AppBar панели на странице \"Новости\"")
     public void shouldCheckAppBarOnNewsIsDisplayed() {
-        NewsPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
+        newsPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -68,7 +72,7 @@ public class NewsPageTest {
     @Test
     @Description(value = "Тест проверяет отображение главной иконки на панели AppBar на странице \"Новости\"")
     public void shouldCheckAppBarLogoOnNewsIsDisplayed() {
-        AppBarPanel.mainImage.checkWithTimeout(matches(isDisplayed()));
+        new AppBarPanel().mainImage.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -77,7 +81,7 @@ public class NewsPageTest {
     @Test
     @Description(value = "Тест проверяет отображение заголовка страницы новостей")
     public void shouldCheckNewsTitleIsDisplayed() {
-        NewsPage.title.checkWithTimeout(matches(isDisplayed()));
+        newsPage.title.checkWithTimeout(matches(isDisplayed()));
     }
 
 
@@ -87,7 +91,7 @@ public class NewsPageTest {
     @Test
     @Description(value = "Тест проверяет отображение списка новостей страницы новости")
     public void shouldCheckNewsListIsDisplayed() {
-        NewsPage.newsList.checkWithTimeout(matches(isDisplayed()));
+        newsPage.newsList.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -96,9 +100,9 @@ public class NewsPageTest {
     @Test
     @Description(value = "Тест проверяет отображение кнопок управления новостями")
     public void shouldCheckControlButtonsIsDisplayed() {
-        NewsPage.sortButton.checkWithTimeout(matches(isDisplayed()));
-        NewsPage.filterButton.checkWithTimeout(matches(isDisplayed()));
-        NewsPage.editButton.checkWithTimeout(matches(isDisplayed()));
+        newsPage.sortButton.checkWithTimeout(matches(isDisplayed()));
+        newsPage.filterButton.checkWithTimeout(matches(isDisplayed()));
+        newsPage.editButton.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -113,22 +117,22 @@ public class NewsPageTest {
         String time = DataGenerator.getCurrentTime();
         String description = DataGenerator.RandomString.getRandomRuString(10);
 
-        NewsPage.addNews(category, title, date, time, description);
+        newsPage.addNews(category, title, date, time, description);
 
-        OpenPage.news();
+        openPage.news();
 
-        NewsPage.ItemNews.newsWithTitle(title).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.ItemNews.dateNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()))
+        newsPage.newsWithTitle(title).checkWithTimeout(matches(isDisplayed()));
+        newsPage.dateNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(date)));
-        NewsPage.ItemNews.iconCategoryNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.ItemNews.dropButtonNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.ItemNews.descriptionNewsWithTitle(title).checkWithTimeout(matches(not(isDisplayed())));
+        newsPage.iconCategoryNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()));
+        newsPage.dropButtonNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()));
+        newsPage.descriptionNewsWithTitle(title).checkWithTimeout(matches(not(isDisplayed())));
 
-        NewsPage.ItemNews.clickOnNews(title);
-        NewsPage.ItemNews.descriptionNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()))
+        newsPage.clickOnNews(title);
+        newsPage.descriptionNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(description)));
 
-        NewsPage.deleteNewsWithTitle(title);
+        newsPage.deleteNewsWithTitle(title);
     }
 
     @Epic(value = "Тестирование UI")
@@ -143,19 +147,19 @@ public class NewsPageTest {
         String acceptButton = "Фильтровать";
         String cancelButton = "Отмена";
 
-        NewsPage.clickOnFilterButton();
+        newsPage.clickOnFilterButton();
 
-        FilterForm.title.checkWithTimeout(matches(isDisplayed()))
+        filterForm.title.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(formTitle)));
-        FilterForm.categoryField.checkWithTimeout(matches(isDisplayed()))
+        filterForm.categoryField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(categoryHint)));
-        FilterForm.dateStartField.checkWithTimeout(matches(isDisplayed()))
+        filterForm.dateStartField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(dateFormat)));
-        FilterForm.dateEndField.checkWithTimeout(matches(isDisplayed()))
+        filterForm.dateEndField.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withHint(dateFormat)));
-        FilterForm.acceptButton.checkWithTimeout(matches(isDisplayed()))
+        filterForm.acceptButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(acceptButton)));
-        FilterForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
+        filterForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(cancelButton)));
     }
     @Epic(value = "Тестирование UI")
@@ -172,16 +176,16 @@ public class NewsPageTest {
         String gratitude = "Благодарность";
         String helpIsNeeded = "Нужна помощь";
 
-        NewsPage.clickOnFilterButton();
-        NewsPage.FilterForm.clickOnCategoryField();
+        newsPage.clickOnFilterButton();
+        filterForm.clickOnCategoryField();
 
-        NewsPage.FilterForm.category(birthday).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.FilterForm.category(salary).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.FilterForm.category(tradeUnion).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.FilterForm.category(holiday).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.FilterForm.category(massage).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.FilterForm.category(gratitude).checkWithTimeout(matches(isDisplayed()));
-        NewsPage.FilterForm.category(helpIsNeeded).checkWithTimeout(matches(isDisplayed()));
+        filterForm.category(birthday).checkWithTimeout(matches(isDisplayed()));
+        filterForm.category(salary).checkWithTimeout(matches(isDisplayed()));
+        filterForm.category(tradeUnion).checkWithTimeout(matches(isDisplayed()));
+        filterForm.category(holiday).checkWithTimeout(matches(isDisplayed()));
+        filterForm.category(massage).checkWithTimeout(matches(isDisplayed()));
+        filterForm.category(gratitude).checkWithTimeout(matches(isDisplayed()));
+        filterForm.category(helpIsNeeded).checkWithTimeout(matches(isDisplayed()));
 
         CustomViewAction.returnBack();
     }

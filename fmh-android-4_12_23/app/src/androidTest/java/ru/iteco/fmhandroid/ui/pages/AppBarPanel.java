@@ -10,70 +10,70 @@ import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.matchers.TimeoutEspresso;
 
 public class AppBarPanel {
-    private static String logOutButtonText = "Выйти";
-    private static String aboutPageButtonText = "О приложении";
-    private static String mainPageButtonText = "Главная";
-    private static String newsPageButtonText = "Новости";
+    private String logOutButtonText = "Выйти";
+    private String aboutPageButtonText = "О приложении";
+    private String mainPageButtonText = "Главная";
+    private String newsPageButtonText = "Новости";
 
-    public static TimeoutEspresso.TimedViewInteraction authorizationButton =
+    public TimeoutEspresso.TimedViewInteraction authorizationButton =
             onViewWithTimeout(withId(R.id.authorization_image_button));
-    public static TimeoutEspresso.TimedViewInteraction logOutButton =
+    public TimeoutEspresso.TimedViewInteraction logOutButton =
             onViewWithTimeout(withText(logOutButtonText));
-    public static TimeoutEspresso.TimedViewInteraction ourMissionButton =
+    public TimeoutEspresso.TimedViewInteraction ourMissionButton =
             onViewWithTimeout(withId(R.id.our_mission_image_button));
-    public static TimeoutEspresso.TimedViewInteraction mainImage =
+    public TimeoutEspresso.TimedViewInteraction mainImage =
             onViewWithTimeout(withId(R.id.trademark_image_view));
-    public static TimeoutEspresso.TimedViewInteraction mainMenuButton =
+    public TimeoutEspresso.TimedViewInteraction mainMenuButton =
             onViewWithTimeout(withId(R.id.main_menu_image_button));
-    public static TimeoutEspresso.TimedViewInteraction mainPageButton =
+    public TimeoutEspresso.TimedViewInteraction mainPageButton =
             onViewWithTimeout(withText(mainPageButtonText));
-    public static TimeoutEspresso.TimedViewInteraction newsPageButton =
+    public TimeoutEspresso.TimedViewInteraction newsPageButton =
             onViewWithTimeout(withText(newsPageButtonText));
-    public static TimeoutEspresso.TimedViewInteraction aboutPageButton =
+    public TimeoutEspresso.TimedViewInteraction aboutPageButton =
             onViewWithTimeout(withText(aboutPageButtonText));
-    public static TimeoutEspresso.TimedViewInteraction aboutBackButton =
+    public TimeoutEspresso.TimedViewInteraction aboutBackButton =
             onViewWithTimeout(withId(R.id.about_back_image_button));
-    public static TimeoutEspresso.TimedViewInteraction topLineText =
+    public TimeoutEspresso.TimedViewInteraction topLineText =
             onViewWithTimeout(withId(R.id.custom_app_bar_title_text_view));
-    public static TimeoutEspresso.TimedViewInteraction bottomLineText =
+    public TimeoutEspresso.TimedViewInteraction bottomLineText =
             onViewWithTimeout(withId(R.id.custom_app_bar_sub_title_text_view));
 
 
-    public static void clickOnMainMenuButton() {
+    public void clickOnMainMenuButton() {
         mainMenuButton.performWithTimeout(click());
     }
 
-    public static void clickOnAuthButton() {
+    public void clickOnAuthButton() {
         authorizationButton.performWithTimeout(click());
         Allure.step("Клик по иконке \"Авторизация\" панели AppBar");
     }
 
-    public static void clickOnLogOutButton() {
+    public void clickOnLogOutButton() {
         Allure.step("Клик по всплывающей кнопке \"Выйти\"");
         logOutButton.performWithTimeout(click());
     }
 
-    public static void clickOnMainPageButton() {
+    public void clickOnMainPageButton() {
         Allure.step("Клик по кнопке \"Главная\" бургерного меню");
         mainPageButton.performWithTimeout(click());
     }
 
-    public static void clickOnNewsPageButton() {
+    public void clickOnNewsPageButton() {
         Allure.step("Клик по кнопке \"Новости\" бургерного меню");
         newsPageButton.performWithTimeout(click());
     }
 
-    public static void clickOnAboutPageButton() {
+    public void clickOnAboutPageButton() {
         Allure.step("Клик по кнопке \"О приложении\" бургерного меню");
         aboutPageButton.performWithTimeout(click());
     }
 
-    public static void clickOnOurMissionButton() {
+    public void clickOnOurMissionButton() {
         Allure.step("Клик по иконке тематических цитат AppBar панели");
         ourMissionButton.performWithTimeout(click());
     }
 
-    public static void clickOnAboutBackButton() {
+    public void clickOnAboutBackButton() {
         Allure.step("Клик по иконке \"Назад\" AppBar панели");
         aboutBackButton.performWithTimeout(click());
     }

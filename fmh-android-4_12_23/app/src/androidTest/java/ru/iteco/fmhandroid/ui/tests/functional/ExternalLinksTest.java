@@ -5,7 +5,6 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 
 import static org.hamcrest.Matchers.allOf;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogIn;
 
 import android.net.Uri;
 
@@ -26,6 +25,7 @@ import io.qameta.allure.kotlin.Feature;
 import io.qameta.allure.kotlin.Story;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.pages.AboutPage;
+import ru.iteco.fmhandroid.ui.steps.Authorization;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 @LargeTest
 @RunWith(AllureAndroidJUnit4.class)
@@ -36,11 +36,13 @@ public class ExternalLinksTest {
     @Rule
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
+    private AboutPage aboutPage;
 
     @Before
     public void setUp() {
-        tryLogIn();
-        OpenPage.about();
+        new Authorization().tryLogIn();
+        new OpenPage().about();
+        aboutPage = new AboutPage();
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -53,7 +55,7 @@ public class ExternalLinksTest {
 
         Intents.init();
 
-        AboutPage.clickOnTermOfUseLink();
+        aboutPage.clickOnTermOfUseLink();
         intended(allOf(
                         hasData(Uri.parse(termOfUseData)),
                         hasAction(ACTION_VIEW)));
@@ -71,7 +73,7 @@ public class ExternalLinksTest {
 
         Intents.init();
 
-        AboutPage.clickOnPrivacyPolicyLink();
+        aboutPage.clickOnPrivacyPolicyLink();
         intended(allOf(
                 hasData(Uri.parse(termOfUseData)),
                 hasAction(ACTION_VIEW)));

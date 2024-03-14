@@ -9,30 +9,31 @@ import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.matchers.TimeoutEspresso;
 
 public class AboutPage {
-    public static TimeoutEspresso.TimedViewInteraction appBarPanel =
+    public TimeoutEspresso.TimedViewInteraction appBarPanel =
             onViewWithTimeout(withId(R.id.container_custom_app_bar_include_on_fragment_about));
-    public static TimeoutEspresso.TimedViewInteraction aboutLabel =
+    public TimeoutEspresso.TimedViewInteraction aboutLabel =
             onViewWithTimeout(withId(R.id.about_company_info_label_text_view));
-    public static TimeoutEspresso.TimedViewInteraction versionText =
+    public TimeoutEspresso.TimedViewInteraction versionText =
             onViewWithTimeout(withId(R.id.about_version_title_text_view));
-    public static TimeoutEspresso.TimedViewInteraction versionNumber =
+    public TimeoutEspresso.TimedViewInteraction versionNumber =
             onViewWithTimeout(withId(R.id.about_version_value_text_view));
-    public static TimeoutEspresso.TimedViewInteraction privacyPolicyText =
+    public TimeoutEspresso.TimedViewInteraction privacyPolicyText =
             onViewWithTimeout(withId(R.id.about_privacy_policy_label_text_view));
-    public static TimeoutEspresso.TimedViewInteraction privacyPolicyLink =
+    public TimeoutEspresso.TimedViewInteraction privacyPolicyLink =
             onViewWithTimeout(withId(R.id.about_privacy_policy_value_text_view));
-    public static TimeoutEspresso.TimedViewInteraction termOfUseText =
+    public TimeoutEspresso.TimedViewInteraction termOfUseText =
             onViewWithTimeout(withId(R.id.about_terms_of_use_label_text_view));
-    public static TimeoutEspresso.TimedViewInteraction termOfUseLink =
+    public TimeoutEspresso.TimedViewInteraction termOfUseLink =
             onViewWithTimeout(withId(R.id.about_terms_of_use_value_text_view));
 
-    public static void clickOnTermOfUseLink() {
+    public void clickOnTermOfUseLink() {
         Allure.step("Клик по ссылке о Пользовательском Соглашении");
         termOfUseLink.performWithTimeout(click());
     }
 
-    public static void clickOnPrivacyPolicyLink() {
+    public void clickOnPrivacyPolicyLink() {
         Allure.step("Клик по ссылке о Политике Конфиденциальности");
         privacyPolicyLink.performWithTimeout(click());
     }
+
 }

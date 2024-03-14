@@ -7,8 +7,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 
 import static ru.iteco.fmhandroid.ui.matchers.CustomViewMatcher.recyclerViewMatcher;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogIn;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogOut;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
@@ -28,7 +26,7 @@ import io.qameta.allure.kotlin.Story;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
 import ru.iteco.fmhandroid.ui.pages.OurMissionPage;
-import ru.iteco.fmhandroid.ui.pages.OurMissionPage.ItemQuote;
+import ru.iteco.fmhandroid.ui.steps.Authorization;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 
 @LargeTest
@@ -40,15 +38,19 @@ public class OurMissionPageTest {
     @Rule
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
+    private Authorization auth = new Authorization();
+    private OurMissionPage ourMissionPage;
 
     @Before
     public void setUp() {
-        tryLogIn();
-        OpenPage.ourMission();
+        auth.tryLogIn();
+        new OpenPage().ourMission();
+
+        ourMissionPage = new OurMissionPage();
     }
     @After
     public void tearDown() {
-        tryLogOut();
+        auth.tryLogOut();
     }
 
     @Epic(value = "Тестирование UI")
@@ -57,7 +59,7 @@ public class OurMissionPageTest {
     @Test
     @Description(value = "Тест проверяет отображение AppBar панели на странице \"Тематические цитаты\"")
     public void shouldCheckAppBarOnOurMissionIsDisplayed() {
-        OurMissionPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
+        ourMissionPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -66,7 +68,7 @@ public class OurMissionPageTest {
     @Test
     @Description(value = "Тест проверяет отображение главной иконки на панели AppBar на странице \"Тематические цитаты\"")
     public void shouldCheckAppBarLogoOnOurMissionIsDisplayed() {
-        AppBarPanel.mainImage.checkWithTimeout(matches(isDisplayed()));
+        new AppBarPanel().mainImage.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -77,7 +79,7 @@ public class OurMissionPageTest {
     public void shouldCheckOurMissionTitleIsDisplayed() {
         String ourMissionTitle = "Главное - жить любя";
 
-       OurMissionPage.title.checkWithTimeout(matches(isDisplayed()))
+        ourMissionPage.title.checkWithTimeout(matches(isDisplayed()))
                .check(matches(withText(ourMissionTitle)));
     }
 
@@ -87,7 +89,7 @@ public class OurMissionPageTest {
     @Test
     @Description(value = "Тест проверяет отображение списка цитат странице тематических цитат")
     public void shouldCheckQuotesListIsDisplayed() {
-        OurMissionPage.quotesList.checkWithTimeout(matches(isDisplayed()));
+        ourMissionPage.quotesList.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -98,7 +100,7 @@ public class OurMissionPageTest {
     public void shouldCheckNumberOfQuotes() {
         int quotesCount = 8;
 
-        OurMissionPage.quotesList.checkWithTimeout(matches(recyclerViewMatcher(quotesCount)));
+        ourMissionPage.quotesList.checkWithTimeout(matches(recyclerViewMatcher(quotesCount)));
     }
 
     @Epic(value = "Тестирование UI")
@@ -109,13 +111,13 @@ public class OurMissionPageTest {
     public void shouldCheckFirstQuoteElementsIsDisplayed() {
         int numberOfQuote = 1;
 
-        ItemQuote.titleOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
-        ItemQuote.iconOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
-        ItemQuote.dropButtonOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
-        ItemQuote.descriptionOfQuote(numberOfQuote).checkWithTimeout(matches(not(isDisplayed())));
+        ourMissionPage.titleOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
+        ourMissionPage.iconOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
+        ourMissionPage.dropButtonOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
+        ourMissionPage.descriptionOfQuote(numberOfQuote).checkWithTimeout(matches(not(isDisplayed())));
 
-        OurMissionPage.clickOnQuote(numberOfQuote);
-        ItemQuote.descriptionOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
+        ourMissionPage.clickOnQuote(numberOfQuote);
+        ourMissionPage.descriptionOfQuote(numberOfQuote).checkWithTimeout(matches(isDisplayed()));
 
     }
 }

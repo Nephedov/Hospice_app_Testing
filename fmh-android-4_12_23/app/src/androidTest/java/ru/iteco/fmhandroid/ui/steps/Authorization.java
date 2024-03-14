@@ -12,54 +12,58 @@ import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
 
 public class Authorization {
-    public static void validLogin() {
+    private AuthorizationPage authorizationPage = new AuthorizationPage();
+    private AppBarPanel appBarPanel = new AppBarPanel();
+
+    public void validLogin() {
         Allure.step("Авторизация валидного пользователя:");
         DataGenerator.User validUser = new DataGenerator().getValidUser();
         auth(validUser.getLogin(), validUser.getPassword());
     }
 
-    public static void invalidLogin() {
+    public void invalidLogin() {
         Allure.step("Авторизация невалидного пользователя:");
         DataGenerator.User invalidUser = new DataGenerator().getInvalidUser();
         auth(invalidUser.getLogin(), invalidUser.getPassword());
     }
 
-    public static void tryLogIn() {
+    public void tryLogIn() {
     // LogIn method for tests Before/After
         try {
-            AuthorizationPage.title.checkWithTimeout(matches(isDisplayed()));
+            authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
         }
         catch (Exception e1){
             tryLogOut();
-            AuthorizationPage.title.checkWithTimeout(matches(isDisplayed()));
+            authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
         }
         validLogin();
-        MainPage.newsContainer.checkWithTimeout(matches(isDisplayed()));
+        new MainPage().newsContainer.checkWithTimeout(matches(isDisplayed()));
     }
 
-    public static void tryLogOut() {
+    public void tryLogOut() {
         // LogOut method for tests Before/After
         try {
-            AuthorizationPage.title.checkWithTimeout(matches(isDisplayed()));
+            authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
         } catch (Exception e) {
             try {
                 Allure.step("Выход из аккаунта:");
                 try {
-                    AppBarPanel.clickOnAuthButton();
+                    appBarPanel.clickOnAuthButton();
                 } catch (Exception e1) {
                     CustomViewAction.returnBack();
-                    AppBarPanel.clickOnAuthButton();
+                    appBarPanel.clickOnAuthButton();
                 }
-                AppBarPanel.clickOnLogOutButton();
-                AuthorizationPage.title.checkWithTimeout(matches(isDisplayed()));
+                appBarPanel.clickOnLogOutButton();
+                authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
             } catch (Exception e1) {
             }
         }
     }
 
-    public static void auth(String login, String password) {
-        AuthorizationPage.insertInLoginField(login);
-        AuthorizationPage.insertInPasswordField(password);
-        AuthorizationPage.clickOnEnterButton();
+    public void auth(String login, String password) {
+
+        authorizationPage.insertInLoginField(login);
+        authorizationPage.insertInPasswordField(password);
+        authorizationPage.clickOnEnterButton();
     }
 }

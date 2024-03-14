@@ -4,9 +4,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogIn;
-import static ru.iteco.fmhandroid.ui.steps.Authorization.tryLogOut;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
@@ -25,6 +22,7 @@ import io.qameta.allure.kotlin.Story;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.pages.AboutPage;
 import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
+import ru.iteco.fmhandroid.ui.steps.Authorization;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 @LargeTest
 @RunWith(AllureAndroidJUnit4.class)
@@ -35,15 +33,19 @@ public class AboutPageTest {
     @Rule
     public ScreenshotRule screenshotRuleFailure =
             new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_failure");
+    private Authorization auth = new Authorization();
+    private AboutPage aboutPage;
 
     @Before
     public void setUp() {
-        tryLogIn();
-        OpenPage.about();
+        auth.tryLogIn();
+        new OpenPage().about();
+
+        aboutPage = new AboutPage();
     }
     @After
     public void tearDown() {
-        tryLogOut();
+        auth.tryLogOut();
     }
 
     @Epic(value = "Тестирование UI")
@@ -52,7 +54,7 @@ public class AboutPageTest {
     @Test
     @Description(value = "Тест проверяет отображение AppBar панели на странице \"О приложении\"")
     public void shouldCheckAppBarOnAboutIsDisplayed() {
-        AboutPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
+        aboutPage.appBarPanel.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -61,7 +63,7 @@ public class AboutPageTest {
     @Test
     @Description(value = "Тест проверяет отображение главной иконки на панели AppBar на странице \"О приложении\"")
     public void shouldCheckAppBarLogoOnAboutIsDisplayed() {
-        AppBarPanel.mainImage.checkWithTimeout(matches(isDisplayed()));
+        new AppBarPanel().mainImage.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Тестирование UI")
@@ -73,9 +75,9 @@ public class AboutPageTest {
         String versionText = "Версия:";
         String versionNumber = "1.0.0";
 
-        AboutPage.versionText.checkWithTimeout(matches(isDisplayed()))
+        aboutPage.versionText.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(versionText)));
-        AboutPage.versionNumber.checkWithTimeout(matches(isDisplayed()))
+        aboutPage.versionNumber.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(versionNumber)));
     }
 
@@ -88,9 +90,9 @@ public class AboutPageTest {
         String privacyPolicyText = "Политика конфиденциальности:";
         String privacyPolicyLink = "https://vhospice.org/#/privacy-policy";
 
-        AboutPage.privacyPolicyText.checkWithTimeout(matches(isDisplayed()))
+        aboutPage.privacyPolicyText.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(privacyPolicyText)));
-        AboutPage.privacyPolicyLink.checkWithTimeout(matches(isDisplayed()))
+        aboutPage.privacyPolicyLink.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(privacyPolicyLink)));
     }
     @Epic(value = "Тестирование UI")
@@ -102,9 +104,9 @@ public class AboutPageTest {
         String privacyPolicyText = "Пользовательское соглашение:";
         String privacyPolicyLink = "https://vhospice.org/#/terms-of-use";
 
-        AboutPage.termOfUseText.checkWithTimeout(matches(isDisplayed()))
+        aboutPage.termOfUseText.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(privacyPolicyText)));
-        AboutPage.termOfUseLink.checkWithTimeout(matches(isDisplayed()))
+        aboutPage.termOfUseLink.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(privacyPolicyLink)));
     }
 
@@ -116,7 +118,7 @@ public class AboutPageTest {
     public void shouldCheckAboutLabelIsDisplayed() {
         String aboutLabel = "© Айтеко, 2022";
 
-        AboutPage.aboutLabel.checkWithTimeout(matches(isDisplayed()))
+        aboutPage.aboutLabel.checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(aboutLabel)));
     }
 }

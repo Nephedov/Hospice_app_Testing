@@ -18,34 +18,34 @@ import ru.iteco.fmhandroid.ui.matchers.TimeoutEspresso;
 import ru.iteco.fmhandroid.ui.matchers.ToastMatcher;
 
 public class AuthorizationPage {
-    private static String authTitle = "Авторизация";
-    private static String loginHint = "Логин";
-    private static String passwordHint = "Пароль";
+    private String authTitle = "Авторизация";
+    private String loginHint = "Логин";
+    private String passwordHint = "Пароль";
 
-    public static TimeoutEspresso.TimedViewInteraction appBarPanel =
+    public TimeoutEspresso.TimedViewInteraction appBarPanel =
             onViewWithTimeout(withId(R.id.container_custom_app_bar_include_on_fragment_main));
-    public static TimeoutEspresso.TimedViewInteraction title =
+    public TimeoutEspresso.TimedViewInteraction title =
             onViewWithTimeout(withText(authTitle));
-    public static TimeoutEspresso.TimedViewInteraction loginField =
+    public TimeoutEspresso.TimedViewInteraction loginField =
             onViewWithTimeout(allOf(withHint(loginHint),
                     withParent(withParent(withId(R.id.login_text_input_layout)))));
-    public static TimeoutEspresso.TimedViewInteraction passwordField =
+    public TimeoutEspresso.TimedViewInteraction passwordField =
             onViewWithTimeout(allOf(withHint(passwordHint),
                     withParent(withParent(withId(R.id.password_text_input_layout)))));
-    public static TimeoutEspresso.TimedViewInteraction enterButton =
+    public TimeoutEspresso.TimedViewInteraction enterButton =
             onViewWithTimeout(withId(R.id.enter_button));
 
-    public static void insertInLoginField(String login) {
+    public void insertInLoginField(String login) {
         Allure.step("Ввод \"" + login + "\" в поле ввода \"Логин\"");
         loginField.performWithTimeout(replaceText(login), closeSoftKeyboard());
     }
 
-    public static void insertInPasswordField(String password) {
+    public void insertInPasswordField(String password) {
         Allure.step("Ввод \"" + password + "\" в поле ввода \"Пароль\"");
         passwordField.performWithTimeout(replaceText(password), closeSoftKeyboard());
     }
 
-    public static void clickOnEnterButton() {
+    public void clickOnEnterButton() {
         Allure.step("Клик по кнопке \"Войти\"");
         enterButton.performWithTimeout(click());
     }
