@@ -16,11 +16,11 @@
         <a href="https://github.com/Nephedov/Hospice_app_Testing">Nephedov/Hospice_app_Testing</a>.
     </li>
     <li>Открыть репозиторий 
-        <a href="/fmh-android-4_12_23/">fmh-android-4_12_23</a> 
+        <a href="/fmh_android_15_03_24/">fmh_android_15_03_24</a> 
         в AndroidStudio.</li>
     <li>Переопределить JAVA используемую в проекте на JAVA_HOME. По пути "File/Settings/Build, Execution, Deployment/Build Tools/Gradle -> Gradle JDK".</li>
     <li>Скомпилировать проект.</li>
     <li>Запустить Android эмулятор с API 29.</li>
-    <li>Запустить выполнение тестов командной "./gradlew connectedAndroidTest" из терминала AndroidStudio. Либо командой "gradle connectedAndroidTest" из другого терминала, находясь в репозитории "fmh-android-4_12_23".</li>
+    <li>Запустить выполнение тестов командной "./gradlew connectedAndroidTest" из терминала AndroidStudio. Либо командой "gradle connectedAndroidTest" из другого терминала, находясь в репозитории "fmh_android_15_03_24".</li>
     <li>По окончании прогона автотестов, выгрузить папку "allure-results". По пути "Device Explorer/sdcard/googletests/test_outputfiles/allure-results"</li>
 </ol>
