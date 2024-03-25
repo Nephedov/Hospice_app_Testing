@@ -5,6 +5,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.Matchers.not;
+
+import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
@@ -23,10 +26,10 @@ import io.qameta.allure.kotlin.Story;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.data.DataGenerator;
 import ru.iteco.fmhandroid.ui.matchers.ToastMatcher;
+import ru.iteco.fmhandroid.ui.pages.ControlPanelPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage;
-import ru.iteco.fmhandroid.ui.pages.NewsPage.ControlPanelPage;
-import ru.iteco.fmhandroid.ui.pages.NewsPage.ControlPanelPage.CreateEditForm;
 import ru.iteco.fmhandroid.ui.steps.Authorization;
+import ru.iteco.fmhandroid.ui.steps.NewsActions;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 
 @LargeTest
@@ -41,14 +44,16 @@ public class NewsTest {
     private Authorization auth = new Authorization();
     private NewsPage newsPage;
     private ControlPanelPage controlPanelPage;
-    private CreateEditForm createEditForm;
+    private ControlPanelPage.CreateEditForm createEditForm;
+    private NewsActions newsActions;
 
     @Before
     public void setUp() {
         auth.tryLogIn();
         newsPage = new OpenPage().news();
-        controlPanelPage = newsPage.new ControlPanelPage();
+        controlPanelPage = new ControlPanelPage();
         createEditForm = controlPanelPage.new CreateEditForm();
+        newsActions = new NewsActions();
     }
     @After
     public void tearDown() {
@@ -56,6 +61,7 @@ public class NewsTest {
         newsPage = null;
         controlPanelPage = null;
         createEditForm = null;
+        newsActions = null;
     }
     @Epic(value = "Функциональное тестирование")
     @Feature(value = "Операции с новостями")
@@ -66,14 +72,15 @@ public class NewsTest {
         String newsTitle = DataGenerator.RandomString.getRandomRuString(5);
 
         // Adding valid news
-        newsPage.addNews(newsTitle);
+        newsActions.addNews(newsTitle);
 
         // Checking that the news has been published
         new OpenPage().news();
+        newsPage.scrollToNewsWithTitle(newsTitle);
         newsPage.newsWithTitle(newsTitle).checkWithTimeout(matches(isDisplayed()));
 
         // Deleting news
-        newsPage.deleteNewsWithTitle(newsTitle);
+        newsActions.deleteNewsWithTitle(newsTitle);
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -89,10 +96,10 @@ public class NewsTest {
         String description = newsTitle;
 
         // Adding valid news
-        newsPage.addNews(category, newsTitle, futureDate, time, description);
+        newsActions.addNews(category, newsTitle, futureDate, time, description);
 
         // Checking that the news has been added to the list
-        controlPanelPage.swipeRefresh();
+        controlPanelPage.scrollToNewsWithTitle(newsTitle);
         controlPanelPage.newsWithTitle(newsTitle).checkWithTimeout(matches(isDisplayed()));
 
         // Checking that the news has not been published
@@ -100,7 +107,7 @@ public class NewsTest {
         newsPage.newsWithTitle(newsTitle).checkWithTimeout(doesNotExist());
 
         // Deleting news
-        newsPage.deleteNewsWithTitle(newsTitle);
+        newsActions.deleteNewsWithTitle(newsTitle);
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -111,7 +118,7 @@ public class NewsTest {
     public void shouldCheckNotAddNewEmptyNews() {
         String toastMessage = "Заполните пустые поля";
 
-        new OpenPage().newsControlPanel();
+        new OpenPage().controlPanel();
         controlPanelPage.clickOnAddNewsButton();
         createEditForm.clickOnSaveButton();
 
@@ -133,7 +140,7 @@ public class NewsTest {
         String newDescription = DataGenerator.RandomString.getRandomRuString(5);
 
         // Adding news
-        newsPage.addNews(title);
+        newsActions.addNews(title);
 
         // Checking the description of the added news
         new OpenPage().news();
@@ -143,7 +150,7 @@ public class NewsTest {
                 .check(matches(withText(title)));
 
         // Editing the description of the added news
-        newsPage.editDescriptionNewsWithTitle(title, newDescription);
+        newsActions.editDescriptionNewsWithTitle(title, newDescription);
 
         // Checking the change in the description of the added news
         new OpenPage().news();
@@ -153,7 +160,7 @@ public class NewsTest {
                 .check(matches(withText(newDescription)));
 
         // Deleting news after the test
-        newsPage.deleteNewsWithTitle(title);
+        newsActions.deleteNewsWithTitle(title);
     }
 
     @Epic(value = "Функциональное тестирование")
@@ -167,23 +174,23 @@ public class NewsTest {
         String statusNotActive = "Не активна";
 
         // Adding news
-        newsPage.addNews(title);
+        newsActions.addNews(title);
 
-        // Checking the status of the added news
-        controlPanelPage.statusNewsWithTitle(title)
-                .checkWithTimeout(matches(isDisplayed()))
-                .check(matches(withText(statusActive)));
+       // Checking the status of the added news
+        controlPanelPage.scrollToNewsWithTitle(title);
+        controlPanelPage.statusNewsWithTitle(title, statusActive)
+                .checkWithTimeout(matches(isDisplayed()));
 
         // Changing the status of an added news item
-        newsPage.changeStatusNewsWithTitle(title);
+        newsActions.changeStatusNewsWithTitle(title);
 
         // Checking the status change of the added news
-        controlPanelPage.statusNewsWithTitle(title)
-                .checkWithTimeout(matches(isDisplayed()))
-                .check(matches(withText(statusNotActive)));
+        controlPanelPage.scrollToNewsWithTitle(title);
+        controlPanelPage.statusNewsWithTitle(title, statusNotActive)
+                .checkWithTimeout(matches(isDisplayed()));
 
         // Deleting news after the test
-        newsPage.deleteNewsWithTitle(title);
+        newsActions.deleteNewsWithTitle(title);
     }
 
 
@@ -199,8 +206,8 @@ public class NewsTest {
         String titleSalary = DataGenerator.RandomString.getRandomRuString(5);
 
         // Adding news
-        newsPage.addNews(titleAnnouncement);
-        newsPage.addNews(categorySalary, titleSalary);
+        newsActions.addNews(titleAnnouncement);
+        newsActions.addNews(categorySalary, titleSalary);
 
         new OpenPage().news();
 
@@ -208,6 +215,7 @@ public class NewsTest {
         newsPage.filterNewsByCategory(categoryAnnouncement);
 
         // Checking the display of news with the "ad" category
+        newsPage.scrollToNewsWithTitle(titleAnnouncement);
         newsPage.newsWithTitle(titleAnnouncement).checkWithTimeout(matches(isDisplayed()));
         // Checking the absence of news with the category "salary"
         newsPage.newsWithTitle(titleSalary).checkWithTimeout(doesNotExist());
@@ -216,13 +224,14 @@ public class NewsTest {
         newsPage.filterNewsByCategory(categorySalary);
 
         // Checking the display of news with the category "salary"
+        newsPage.scrollToNewsWithTitle(titleSalary);
         newsPage.newsWithTitle(titleSalary).checkWithTimeout(matches(isDisplayed()));
         // Checking the absence of news with the "ad" category
         newsPage.newsWithTitle(titleAnnouncement).checkWithTimeout(doesNotExist());
 
         // Deleting news after the test
-        newsPage.deleteNewsWithTitle(titleAnnouncement);
-        newsPage.deleteNewsWithTitle(titleSalary);
+        newsActions.deleteNewsWithTitle(titleAnnouncement);
+        newsActions.deleteNewsWithTitle(titleSalary);
     }
 
 
@@ -235,13 +244,14 @@ public class NewsTest {
         String newsTitle = DataGenerator.RandomString.getRandomRuString(5);
 
         // Adding valid news
-        newsPage.addNews(newsTitle);
+        newsActions.addNews(newsTitle);
 
         // Checking that the news has been added to the list
+        controlPanelPage.scrollToNewsWithTitle(newsTitle);
         controlPanelPage.newsWithTitle(newsTitle).checkWithTimeout(matches(isDisplayed()));
 
         // Deleting news
-        newsPage.deleteNewsWithTitle(newsTitle);
+        newsActions.deleteNewsWithTitle(newsTitle);
 
         // Checking that the news has been deleted
         controlPanelPage.swipeRefresh();

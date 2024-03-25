@@ -81,7 +81,7 @@ public class AuthorizationTest {
     public void shouldCheckValidAuthorization() {
         new Authorization().validLogin();
 
-        new MainPage().newsContainer.checkWithTimeout(matches(isDisplayed()));
+        new MainPage().appBarPanel.checkWithTimeout(matches(isDisplayed()));
     }
 
     @Epic(value = "Функциональное тестирование")

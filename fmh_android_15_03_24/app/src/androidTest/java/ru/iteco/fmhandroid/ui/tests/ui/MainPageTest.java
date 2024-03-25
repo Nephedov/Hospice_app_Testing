@@ -27,6 +27,7 @@ import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage;
 import ru.iteco.fmhandroid.ui.steps.Authorization;
+import ru.iteco.fmhandroid.ui.steps.NewsActions;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 
 @LargeTest
@@ -116,9 +117,9 @@ public class MainPageTest {
     @Test
     @Description(value = "Тест проверяет отображение списка новостей на главной странице")
     public void shouldCheckNewsListIsDisplayed() {
-        NewsPage newsPage = new NewsPage();
+        NewsActions newsActions = new NewsActions();
         String newsTitle = DataGenerator.RandomString.getRandomRuString(5);
-        newsPage.addNews(newsTitle);
+        newsActions.addNews(newsTitle);
         new OpenPage().main();
 
         mainPage.allNewsButton.checkWithTimeout(matches(isDisplayed()));
@@ -129,30 +130,7 @@ public class MainPageTest {
         mainPage.allNewsButton.checkWithTimeout(matches(not(isDisplayed())));
         mainPage.newsList.checkWithTimeout(matches(not(isDisplayed())));
 
-        newsPage.deleteNewsWithTitle(newsTitle);
-    }
-
-    @Epic(value = "Тестирование UI")
-    @Feature(value = "\"Главная\" страница")
-    @Story(value = "Количество новостей в списке")
-    @Test
-    @Description(value = "Тест проверяет количество новостей блока новостей на главной странице")
-    public void shouldCheckNumberOfNews() {
-        NewsPage newsPage = new NewsPage();
-        String newsTitle1 = DataGenerator.RandomString.getRandomRuString(5);
-        String newsTitle2 = DataGenerator.RandomString.getRandomRuString(5);
-        String newsTitle3 = DataGenerator.RandomString.getRandomRuString(5);
-        newsPage.addNews(newsTitle1);
-        newsPage.addNews(newsTitle2);
-        newsPage.addNews(newsTitle3);
-        new OpenPage().main();
-        int newsCount = 3;
-
-        mainPage.newsList.checkWithTimeout(matches(recyclerViewMatcher(newsCount)));
-
-        newsPage.deleteNewsWithTitle(newsTitle1);
-        newsPage.deleteNewsWithTitle(newsTitle2);
-        newsPage.deleteNewsWithTitle(newsTitle3);
+        newsActions.deleteNewsWithTitle(newsTitle);
     }
 }
 

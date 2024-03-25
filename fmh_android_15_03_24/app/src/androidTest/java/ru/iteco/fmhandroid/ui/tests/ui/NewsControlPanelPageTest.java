@@ -6,6 +6,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.not;
 
+import static ru.iteco.fmhandroid.ui.matchers.CustomViewAction.returnBack;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
@@ -22,12 +24,12 @@ import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Feature;
 import io.qameta.allure.kotlin.Story;
 import ru.iteco.fmhandroid.ui.AppActivity;
+import ru.iteco.fmhandroid.ui.data.DataGenerator;
 import ru.iteco.fmhandroid.ui.matchers.CustomViewAction;
 import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
-import ru.iteco.fmhandroid.ui.pages.NewsPage;
-import ru.iteco.fmhandroid.ui.pages.NewsPage.ControlPanelPage;
-import ru.iteco.fmhandroid.ui.pages.NewsPage.ControlPanelPage.*;
+import ru.iteco.fmhandroid.ui.pages.ControlPanelPage;
 import ru.iteco.fmhandroid.ui.steps.Authorization;
+import ru.iteco.fmhandroid.ui.steps.NewsActions;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 
 @LargeTest
@@ -42,13 +44,13 @@ public class NewsControlPanelPageTest {
     private Authorization auth = new Authorization();
     private AppBarPanel appBarPanel;
     private ControlPanelPage controlPanelPage;
-    private FilterFormControlPanel filterFormControlPanel;
-    private CreateEditForm createEditForm;
+    private ControlPanelPage.FilterFormControlPanel filterFormControlPanel;
+    private ControlPanelPage.CreateEditForm createEditForm;
     @Before
     public void setUp() {
         auth.tryLogIn();
         appBarPanel = new AppBarPanel();
-        controlPanelPage = new OpenPage().newsControlPanel();
+        controlPanelPage = new OpenPage().controlPanel();
         filterFormControlPanel = controlPanelPage.new FilterFormControlPanel();
         createEditForm = controlPanelPage.new CreateEditForm();
     }
@@ -100,35 +102,40 @@ public class NewsControlPanelPageTest {
         controlPanelPage.addNewsButton.checkWithTimeout(matches(isDisplayed()));
     }
 
-//    @Epic(value = "Тестирование UI")
-//    @Feature(value = "Страница \"Панель управления\"")
-//    @Story(value = "Элементы скрытой новости")
-//    @Test
-//    @Description(value = "Тест проверяет отображение элементов первой в списке нераскрытой новости")
-//    public void shouldCheckHiddenFirstNewsElementsIsDisplayed() {
-//        int numberOfNews = 1;
-//        String publicationTextField = "Дата публикации";
-//        String creationTextField = "Дата создания";
-//        String authorTextField = "Автор";
-//
-//        controlPanelPage.titleOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.publicationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed())).
-//                check(matches(withText(publicationTextField)));
-//        controlPanelPage.publicationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.creationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withText(creationTextField)));
-//        controlPanelPage.creationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.authorTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withText(authorTextField)));
-//        controlPanelPage.authorNameField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.publicationStatus(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.deleteNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.editNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.dropButtonOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//        controlPanelPage.iconOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
-//
-//        controlPanelPage.descriptionOfNews(numberOfNews).checkWithTimeout(matches(not(isDisplayed())));
-//    }
+    @Epic(value = "Тестирование UI")
+    @Feature(value = "Страница \"Панель управления\"")
+    @Story(value = "Элементы скрытой новости")
+    @Test
+    @Description(value = "Тест проверяет отображение элементов первой в списке нераскрытой новости")
+    public void shouldCheckHiddenFirstNewsElementsIsDisplayed() {
+        NewsActions newsActions = new NewsActions();
+        String title = DataGenerator.RandomString.getRandomRuString(5);
+        newsActions.addNews(title);
+        int numberOfNews = 1;
+        String publicationTextField = "Дата публикации";
+        String creationTextField = "Дата создания";
+        String authorTextField = "Автор";
+
+        controlPanelPage.titleOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.publicationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed())).
+                check(matches(withText(publicationTextField)));
+        controlPanelPage.publicationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.creationTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withText(creationTextField)));
+        controlPanelPage.creationDateField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.authorTextField(numberOfNews).checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withText(authorTextField)));
+        controlPanelPage.authorNameField(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.publicationStatus(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.deleteNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.editNewsButton(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.dropButtonOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+        controlPanelPage.iconOfNews(numberOfNews).checkWithTimeout(matches(isDisplayed()));
+
+        controlPanelPage.descriptionOfNews(numberOfNews).checkWithTimeout(matches(not(isDisplayed())));
+
+        newsActions.deleteNewsWithTitle(title);
+    }
 
     @Epic(value = "Тестирование UI")
     @Feature(value = "Страница \"Панель управления\"")
@@ -190,48 +197,53 @@ public class NewsControlPanelPageTest {
 
         CustomViewAction.returnBack();
     }
-//
-//    @Epic(value = "Тестирование UI")
-//    @Feature(value = "Страница \"Панель управления\"")
-//    @Story(value = "Форма редактирования новости")
-//    @Test
-//    @Description(value = "Тест проверяет отображение элементов формы редактирования новости")
-//    public void shouldCheckEditFormElementsOnControlPanelIsDisplayed() {
-//        String appBarTopLine = "Редактирование";
-//        String appBarBottomLine = "Новости";
-//
-//        String categoryField = "Категория";
-//        String titleField = "Заголовок";
-//        String publicationDateField = "Дата публикации";
-//        String publicationTimeField = "Время";
-//        String descriptionField = "Описание";
-//        String saveButton = "Сохранить";
-//        String cancelButton = "Отмена";
-//
-//        controlPanelPage.clickOnEditNewsButton(1);
-//
-//        appBarPanel.topLineText.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withText(appBarTopLine)));
-//        appBarPanel.bottomLineText.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withText(appBarBottomLine)));
-//
-//        createEditForm.categoryField.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withHint(categoryField)));
-//        createEditForm.titleField.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withHint(titleField)));
-//        createEditForm.publicationDateField.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withHint(publicationDateField)));
-//        createEditForm.publicationTimeField.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withHint(publicationTimeField)));
-//        createEditForm.descriptionField.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withHint(descriptionField)));
-//        createEditForm.switcher.checkWithTimeout(matches(isDisplayed()));
-//        createEditForm.saveButton.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withText(saveButton)));
-//        createEditForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
-//                .check(matches(withText(cancelButton)));
-//    }
-//
+
+    @Epic(value = "Тестирование UI")
+    @Feature(value = "Страница \"Панель управления\"")
+    @Story(value = "Форма редактирования новости")
+    @Test
+    @Description(value = "Тест проверяет отображение элементов формы редактирования новости")
+    public void shouldCheckEditFormElementsOnControlPanelIsDisplayed() {
+        NewsActions newsActions = new NewsActions();
+        String title = DataGenerator.RandomString.getRandomRuString(5);
+        newsActions.addNews(title);
+        String appBarTopLine = "Редактирование";
+        String appBarBottomLine = "Новости";
+
+        String categoryField = "Категория";
+        String titleField = "Заголовок";
+        String publicationDateField = "Дата публикации";
+        String publicationTimeField = "Время";
+        String descriptionField = "Описание";
+        String saveButton = "Сохранить";
+        String cancelButton = "Отмена";
+
+        controlPanelPage.clickOnEditButtonNewsWithTitle(title);
+
+        appBarPanel.topLineText.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withText(appBarTopLine)));
+        appBarPanel.bottomLineText.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withText(appBarBottomLine)));
+
+        createEditForm.categoryField.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withHint(categoryField)));
+        createEditForm.titleField.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withHint(titleField)));
+        createEditForm.publicationDateField.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withHint(publicationDateField)));
+        createEditForm.publicationTimeField.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withHint(publicationTimeField)));
+        createEditForm.descriptionField.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withHint(descriptionField)));
+        createEditForm.switcher.checkWithTimeout(matches(isDisplayed()));
+        createEditForm.saveButton.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withText(saveButton)));
+        createEditForm.cancelButton.checkWithTimeout(matches(isDisplayed()))
+                .check(matches(withText(cancelButton)));
+        returnBack();
+        newsActions.deleteNewsWithTitle(title);
+    }
+
     @Epic(value = "Тестирование UI")
     @Feature(value = "Страница \"Панель управления\"")
     @Story(value = "Форма создания новости")

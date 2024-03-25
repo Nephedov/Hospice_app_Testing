@@ -29,6 +29,7 @@ import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
 import ru.iteco.fmhandroid.ui.pages.NewsPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage.FilterForm;
 import ru.iteco.fmhandroid.ui.steps.Authorization;
+import ru.iteco.fmhandroid.ui.steps.NewsActions;
 import ru.iteco.fmhandroid.ui.steps.OpenPage;
 
 @LargeTest
@@ -90,13 +91,14 @@ public class NewsPageTest {
     @Test
     @Description(value = "Тест проверяет отображение списка новостей страницы новости")
     public void shouldCheckNewsListIsDisplayed() {
+        NewsActions newsActions = new NewsActions();
         String newsTitle = DataGenerator.RandomString.getRandomRuString(5);
-        newsPage.addNews(newsTitle);
+        newsActions.addNews(newsTitle);
 
         new OpenPage().news();
         newsPage.newsList.checkWithTimeout(matches(isDisplayed()));
 
-        newsPage.deleteNewsWithTitle(newsTitle);
+        newsActions.deleteNewsWithTitle(newsTitle);
     }
 
     @Epic(value = "Тестирование UI")
@@ -116,16 +118,18 @@ public class NewsPageTest {
     @Test()
     @Description(value = "Тест проверяет отображение элементов новости")
     public void shouldCheckNewNewsElementsIsDisplayed() {
+        NewsActions newsActions = new NewsActions();
+
         String category = "Зарплата";
         String title = DataGenerator.RandomString.getRandomRuString(5);
         String date = DataGenerator.getCurrentDate();
         String time = DataGenerator.getCurrentTime();
         String description = DataGenerator.RandomString.getRandomRuString(10);
 
-        newsPage.addNews(category, title, date, time, description);
+        newsActions.addNews(category, title, date, time, description);
 
         new OpenPage().news();
-
+        newsPage.scrollToNewsWithTitle(title);
         newsPage.newsWithTitle(title).checkWithTimeout(matches(isDisplayed()));
         newsPage.dateNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(date)));
@@ -137,7 +141,7 @@ public class NewsPageTest {
         newsPage.descriptionNewsWithTitle(title).checkWithTimeout(matches(isDisplayed()))
                 .check(matches(withText(description)));
 
-        newsPage.deleteNewsWithTitle(title);
+        newsActions.deleteNewsWithTitle(title);
     }
 
     @Epic(value = "Тестирование UI")

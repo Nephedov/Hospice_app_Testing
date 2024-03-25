@@ -12,8 +12,6 @@ import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
 
 public class Authorization {
-//    private AuthorizationPage authorizationPage = new AuthorizationPage();
-//    private AppBarPanel appBarPanel = new AppBarPanel();
 
     public void validLogin() {
         Allure.step("Авторизация валидного пользователя:");
@@ -46,20 +44,20 @@ public class Authorization {
         AppBarPanel appBarPanel = new AppBarPanel();
         // LogOut method for tests Before/After
         try {
-            authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
-        } catch (Exception e) {
             try {
                 Allure.step("Выход из аккаунта:");
+                appBarPanel.clickOnAuthButton();
+                appBarPanel.clickOnLogOutButton();
+            } catch (Exception e) {
                 try {
-                    appBarPanel.clickOnAuthButton();
+                    authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
                 } catch (Exception e1) {
                     CustomViewAction.returnBack();
                     appBarPanel.clickOnAuthButton();
+                    appBarPanel.clickOnLogOutButton();
                 }
-                appBarPanel.clickOnLogOutButton();
-                authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
-            } catch (Exception e1) {
             }
+        } catch (Exception e) {
         }
     }
 

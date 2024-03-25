@@ -6,12 +6,15 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 
 import static org.hamcrest.Matchers.allOf;
 
+import static ru.iteco.fmhandroid.ui.matchers.CustomViewAction.stopExecutionForSeconds;
+
 import android.net.Uri;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,6 +45,10 @@ public class ExternalLinksTest {
     public void setUp() {
         new Authorization().tryLogIn();
         aboutPage = new OpenPage().about();
+    }
+    @After
+    public void tearDown() {
+        aboutPage = null;
     }
 
     @Epic(value = "Функциональное тестирование")

@@ -8,7 +8,7 @@ import ru.iteco.fmhandroid.ui.matchers.CustomViewAction;
 import ru.iteco.fmhandroid.ui.pages.AboutPage;
 import ru.iteco.fmhandroid.ui.pages.AppBarPanel;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
-import ru.iteco.fmhandroid.ui.pages.NewsPage.ControlPanelPage;
+import ru.iteco.fmhandroid.ui.pages.ControlPanelPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage;
 import ru.iteco.fmhandroid.ui.pages.OurMissionPage;
 
@@ -69,9 +69,9 @@ public class OpenPage {
         }
     }
 
-    public ControlPanelPage newsControlPanel() {
+    public ControlPanelPage controlPanel() {
         NewsPage newsPage = new NewsPage();
-        ControlPanelPage controlPanelPage = new NewsPage().new ControlPanelPage();
+        ControlPanelPage controlPanelPage = new ControlPanelPage();
         try {
             controlPanelPage.title.check(matches(isDisplayed()));
             return controlPanelPage;
