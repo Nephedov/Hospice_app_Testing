@@ -48,6 +48,7 @@ public class Authorization {
                 Allure.step("Выход из аккаунта:");
                 appBarPanel.clickOnAuthButton();
                 appBarPanel.clickOnLogOutButton();
+                authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
             } catch (Exception e) {
                 try {
                     authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
@@ -55,6 +56,7 @@ public class Authorization {
                     CustomViewAction.returnBack();
                     appBarPanel.clickOnAuthButton();
                     appBarPanel.clickOnLogOutButton();
+                    authorizationPage.title.checkWithTimeout(matches(isDisplayed()));
                 }
             }
         } catch (Exception e) {
